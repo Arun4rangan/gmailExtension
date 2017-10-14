@@ -1,0 +1,31 @@
+{
+    "name": "gTasker Extension",
+    "manifest_version": 2,
+    "description": "Sync with Couchbase in a Google Chrome extension",
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArxSbbeKSnNe6jml4+o9U80oFTpTzzZYe+8S9Bh5n/Ky3Kcs8dV7/+RIvAz3wCUViKuEsRuu4SFIqrl0kFBF1/Iq3oedEp0f7CPmhmchlkNtYLIR9odZkTg22rG2Wcvjnqkq9TnHAm9S8abpAeNsrrJFWkDEtFL5W4rglJ0bhPUpnVpC1OK1SVr9wdosvUHDLRBNsxffweZ3ynzl08iEDyRbYpevE2lL8BE0C/OcbunMv+gUSOpJutKSE6nLHLlUZBxAF5ustVPvA6PzxnSfz1+wau+0cxS5iiz/GfznRz5ei4jpDidHWHLCNFOCGejzFmz9rwAJK+tFEcVW/WPQPGQIDAQAB",
+    "version": "1.0",
+    "browser_action": {
+        "default_icon": "favicon.ico",
+        "default_popup": "index.html"
+    },
+    "permissions": [
+        "identity",
+        "https://ssl.gstatic.com/",
+        "https://www.googleapis.com/",
+        "https://accounts.google.com/",
+        "https://accounts.google.com/o/oauth2/token",
+        "identity.email"
+    ],
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+    "web_accessible_resources": [
+        "assets/css/*",
+        "assets/js/*",
+        "assets/fonts/*"
+    ],
+    "oauth2": {
+        "client_id": "1047311040462-mo6voatnrhtqqh1j0fl836evb1fppeun.apps.googleusercontent.com",
+        "scopes": [
+          "https://www.googleapis.com/auth/calendar"
+        ]
+    }
+}
