@@ -34,7 +34,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div style=\"text-align:center\">\n  <h1>\n    {{title}}!\n  </h1>\n</div>\n<chrome-login></chrome-login>\n\n"
+module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div style=\"text-align:center\">\n  <h1>\n    {{title}}!\n  </h1>\n</div>\n<create-event></create-event>\n<tasks-list></tasks-list>\n\n"
 
 /***/ }),
 
@@ -76,11 +76,14 @@ AppComponent = __decorate([
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__("../../../platform-browser/@angular/platform-browser.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__chrome_login_component__ = __webpack_require__("../../../../../src/app/chrome-login.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__user_token_service__ = __webpack_require__("../../../../../src/app/user-token.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__calendar_service__ = __webpack_require__("../../../../../src/app/calendar.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ngx_pagination__ = __webpack_require__("../../../../ngx-pagination/dist/ngx-pagination.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__task_list_component__ = __webpack_require__("../../../../../src/app/task-list.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__create_event_component__ = __webpack_require__("../../../../../src/app/create-event.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__user_token_service__ = __webpack_require__("../../../../../src/app/user-token.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__calendar_service__ = __webpack_require__("../../../../../src/app/calendar.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -94,26 +97,32 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
+
+
+
 var AppModule = (function () {
     function AppModule() {
     }
     return AppModule;
 }());
 AppModule = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["L" /* NgModule */])({
+    Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["L" /* NgModule */])({
         declarations: [
-            __WEBPACK_IMPORTED_MODULE_3__app_component__["a" /* AppComponent */],
-            __WEBPACK_IMPORTED_MODULE_4__chrome_login_component__["a" /* ChromeLogin */]
+            __WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */],
+            __WEBPACK_IMPORTED_MODULE_6__task_list_component__["a" /* TaskListComponent */],
+            __WEBPACK_IMPORTED_MODULE_7__create_event_component__["a" /* CreateEventComponent */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
-            __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* HttpModule */]
+            __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* HttpModule */],
+            __WEBPACK_IMPORTED_MODULE_4__angular_forms__["a" /* FormsModule */],
+            __WEBPACK_IMPORTED_MODULE_2_ngx_pagination__["a" /* NgxPaginationModule */]
         ],
         providers: [
-            __WEBPACK_IMPORTED_MODULE_5__user_token_service__["a" /* UserTokenService */],
-            __WEBPACK_IMPORTED_MODULE_6__calendar_service__["a" /* CalendarService */]
+            __WEBPACK_IMPORTED_MODULE_8__user_token_service__["a" /* UserTokenService */],
+            __WEBPACK_IMPORTED_MODULE_9__calendar_service__["a" /* CalendarService */]
         ],
-        bootstrap: [__WEBPACK_IMPORTED_MODULE_3__app_component__["a" /* AppComponent */]]
+        bootstrap: [__WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */]]
     })
 ], AppModule);
 
@@ -148,8 +157,15 @@ var CalendarService = (function () {
         this.url = 'https://www.googleapis.com/calendar/v3';
     }
     CalendarService.prototype.getEvents = function (calendar, token) {
-        var event_url = '/calendars/' + calendar + '/events?access_token=' + token;
-        return this.http.get(this.url + event_url)
+        var get_event = '/calendars/' + calendar + '/events?access_token=' + token;
+        return this.http.get(this.url + get_event)
+            .toPromise()
+            .then(function (response) { return response.json(); })
+            .catch(this.handleError);
+    };
+    CalendarService.prototype.createEvent = function (calendar, token, event) {
+        var create_event = '/calendars/' + calendar + '/events?access_token=' + token;
+        return this.http.post(this.url + create_event, event)
             .toPromise()
             .then(function (response) { return response.json(); })
             .catch(this.handleError);
@@ -170,18 +186,36 @@ var _a;
 
 /***/ }),
 
-/***/ "../../../../../src/app/chrome-login.component.html":
-/***/ (function(module, exports) {
+/***/ "../../../../../src/app/create-event.component.css":
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<div>\n    <button (click)=\"getListofEvents()\"> Calender Login </button>\n    <p>{{calendars}}</p>\n</div>"
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "[class*='col-'] {\n  float: left;\n  padding-right: 20px;\n  padding-bottom: 20px;\n}\n[class*='col-']:last-of-type {\n  padding-right: 0;\n}\na {\n  text-decoration: none;\n}\n*, *:after, *:before {\n  box-sizing: border-box;\n}\nh3 {\n  text-align: center; margin-bottom: 0;\n}\nh4 {\n  position: relative;\n}\n.grid {\n  margin: 0;\n}\n.col-1-4 {\n  width: 25%;\n}\n.module {\n  padding: 20px;\n  text-align: center;\n  color: #eee;\n  max-height: 120px;\n  min-width: 120px;\n  background-color: #607D8B;\n  border-radius: 2px;\n}\n.module:hover {\n  background-color: #EEE;\n  cursor: pointer;\n  color: #607d8b;\n}\n.grid-pad {\n  padding: 10px 0;\n}\n.grid-pad > [class*='col-']:last-of-type {\n  padding-right: 20px;\n}\n@media (max-width: 600px) {\n  .module {\n    font-size: 10px;\n    max-height: 75px; }\n}\n@media (max-width: 1024px) {\n  .grid {\n    margin: 0;\n  }\n  .module {\n    min-width: 60px;\n  }\n}", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ "../../../../../src/app/chrome-login.component.ts":
+/***/ "../../../../../src/app/create-event.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"grid grid-pad\">\n  <select [(ngModel)]=\"type\">\n    <option *ngFor=\"let type of types\">{{type}}</option>\n  </select>\n  <input [(ngModel)]=\"summary\">\n  <input [(ngModel)]=\"startDatetime\">\n  <button (click)=\"insertEventInCalender()\">Create</button>\n</div>"
+
+/***/ }),
+
+/***/ "../../../../../src/app/create-event.component.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ChromeLogin; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CreateEventComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_token_service__ = __webpack_require__("../../../../../src/app/user-token.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__calendar_service__ = __webpack_require__("../../../../../src/app/calendar.service.ts");
@@ -197,19 +231,117 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var ChromeLogin = (function () {
-    function ChromeLogin(userTokenService, calendarService) {
+var CreateEventComponent = (function () {
+    function CreateEventComponent(userTokenService, calendarService) {
         this.userTokenService = userTokenService;
         this.calendarService = calendarService;
+        this.types = ['homework', 'task', 'project'];
         this.userDetail = {};
     }
-    ChromeLogin.prototype.getUser = function () {
+    CreateEventComponent.prototype.getUser = function () {
         return [
             this.userTokenService.getUserInfo(),
             this.userTokenService.getIdentity()
         ];
     };
-    ChromeLogin.prototype.getListofEvents = function () {
+    CreateEventComponent.prototype.insertEventInCalender = function () {
+        var _this = this;
+        var event = this.createEvent();
+        var userPromise = this.getUser();
+        Promise.all(userPromise)
+            .then(function (userDetail) {
+            _this.userDetail = userDetail[0];
+            _this.token = userDetail[1];
+            _this.calendarService.createEvent(_this.userDetail.email, _this.token, event)
+                .then(function (data) {
+                console.log(data);
+            });
+        });
+    };
+    CreateEventComponent.prototype.createEvent = function () {
+        return {
+            'summary': this.type + ':' + this.summary,
+            'start': {
+                'dateTime': new Date(this.startDatetime).toISOString(),
+                'timeZone': Intl.DateTimeFormat().resolvedOptions().timeZone
+            },
+            'end': {
+                'dateTime': this.addDay(this.startDatetime).toISOString(),
+                'timeZone': Intl.DateTimeFormat().resolvedOptions().timeZone
+            },
+            'attendees': [],
+            'reminders': {
+                'useDefault': false,
+                'overrides': [
+                    { 'method': 'popup', 'minutes': 24 * 60 },
+                ]
+            }
+        };
+    };
+    CreateEventComponent.prototype.addDay = function (date) {
+        var extra_day = new Date(date);
+        extra_day.setDate(extra_day.getDate() + 1);
+        return extra_day;
+    };
+    return CreateEventComponent;
+}());
+CreateEventComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'create-event',
+        template: __webpack_require__("../../../../../src/app/create-event.component.html"),
+        providers: [__WEBPACK_IMPORTED_MODULE_1__user_token_service__["a" /* UserTokenService */], __WEBPACK_IMPORTED_MODULE_2__calendar_service__["a" /* CalendarService */]],
+        styles: [__webpack_require__("../../../../../src/app/create-event.component.css")]
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__user_token_service__["a" /* UserTokenService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__user_token_service__["a" /* UserTokenService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__calendar_service__["a" /* CalendarService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__calendar_service__["a" /* CalendarService */]) === "function" && _b || Object])
+], CreateEventComponent);
+
+var _a, _b;
+//# sourceMappingURL=create-event.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/task-list.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div>\n    <button (click)=\"getListofEvents()\"> Calender Login </button>\n    <ul>\n      <li *ngFor=\"let item of events | paginate: { itemsPerPage: 3, currentPage: page }\">\n        {{item.summary}}\n      </li>\n    </ul>\n    <pagination-controls (pageChange)=\"page = $event\"></pagination-controls>\n</div>"
+
+/***/ }),
+
+/***/ "../../../../../src/app/task-list.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TaskListComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_token_service__ = __webpack_require__("../../../../../src/app/user-token.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__calendar_service__ = __webpack_require__("../../../../../src/app/calendar.service.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var TaskListComponent = (function () {
+    function TaskListComponent(userTokenService, calendarService) {
+        this.userTokenService = userTokenService;
+        this.calendarService = calendarService;
+        this.page = 1;
+        this.userDetail = {};
+        this.types = ['homework', 'task', 'project'];
+    }
+    TaskListComponent.prototype.getUser = function () {
+        return [
+            this.userTokenService.getUserInfo(),
+            this.userTokenService.getIdentity()
+        ];
+    };
+    TaskListComponent.prototype.getListofEvents = function () {
         var _this = this;
         var userPromise = this.getUser();
         Promise.all(userPromise)
@@ -218,26 +350,33 @@ var ChromeLogin = (function () {
             _this.token = userDetail[1];
             _this.calendarService.getEvents(_this.userDetail.email, _this.token)
                 .then(function (events) {
-                console.log(events);
+                _this.events = events.items.filter(function (event) {
+                    for (var i = 0; i < _this.types.length; i++) {
+                        if (event.summary.includes(_this.types[i])) {
+                            return true;
+                        }
+                    }
+                    return false;
+                });
             });
         });
     };
-    ChromeLogin.prototype.handleError = function (error) {
+    TaskListComponent.prototype.handleError = function (error) {
         console.log('Error has occured', error);
         return Promise.reject(error.message || error);
     };
-    return ChromeLogin;
+    return TaskListComponent;
 }());
-ChromeLogin = __decorate([
+TaskListComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'chrome-login',
-        template: __webpack_require__("../../../../../src/app/chrome-login.component.html"),
+        selector: 'tasks-list',
+        template: __webpack_require__("../../../../../src/app/task-list.component.html"),
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__user_token_service__["a" /* UserTokenService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__user_token_service__["a" /* UserTokenService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__calendar_service__["a" /* CalendarService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__calendar_service__["a" /* CalendarService */]) === "function" && _b || Object])
-], ChromeLogin);
+], TaskListComponent);
 
 var _a, _b;
-//# sourceMappingURL=chrome-login.component.js.map
+//# sourceMappingURL=task-list.component.js.map
 
 /***/ }),
 
@@ -324,7 +463,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 if (__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].production) {
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_19" /* enableProdMode */])();
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_20" /* enableProdMode */])();
 }
 Object(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_2__app_app_module__["a" /* AppModule */]);
 //# sourceMappingURL=main.js.map

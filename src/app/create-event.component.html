@@ -1,0 +1,8 @@
+<div class="grid grid-pad">
+  <select [(ngModel)]="type">
+    <option *ngFor="let type of types">{{type}}</option>
+  </select>
+  <input [(ngModel)]="summary">
+  <input [(ngModel)]="startDatetime">
+  <button (click)="insertEventInCalender()">Create</button>
+</div>

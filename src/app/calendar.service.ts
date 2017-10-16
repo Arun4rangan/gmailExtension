@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core'
 import { Http,Headers }  from '@angular/http'
 
+import { Event } from './event'
+
 import {} from '@types/chrome'
 
 import 'rxjs/add/operator/toPromise';
@@ -12,14 +14,20 @@ export class CalendarService{
   constructor(private http: Http){}
 
   getEvents(calendar: string, token: string): Promise<any> {
-    let event_url = '/calendars/'+ calendar +'/events?access_token=' + token
-    return this.http.get(this.url+event_url)
+    let get_event = '/calendars/'+ calendar +'/events?access_token=' + token
+    return this.http.get(this.url+get_event)
       .toPromise()
       .then(response => response.json())
       .catch(this.handleError)
   }
 
-  createEvent(calendar:string, token:strong, )
+  createEvent(calendar:string, token:string, event: Event ): Promise<any> {
+    let create_event = '/calendars/'+ calendar + '/events?access_token=' + token
+    return this.http.post(this.url + create_event, event)
+      .toPromise()
+      .then(response => response.json())
+      .catch(this.handleError)
+  }
 
 
   private handleError(error:any): Promise<any> {
