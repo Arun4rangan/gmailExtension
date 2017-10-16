@@ -3,17 +3,22 @@ import { Component } from '@angular/core'
 import { UserTokenService } from './user-token.service'
 import { CalendarService } from './calendar.service'
 
+import { Event } from './event'
+
 import {} from '@types/gapi'
 
 @Component({
-  selector:'chrome-login',
-  templateUrl:'./chrome-login.component.html',
+  selector:'tasks-list',
+  templateUrl:'./task-list.component.html',
 })
 
-export class ChromeLogin{
+export class TaskListComponent{
+  private page: number = 1;
   private token: string;
   private userDetail: any={};
   private calendar: string;
+  private types = ['homework', 'task','project'];
+  private events: Event[];
 
   constructor (
     private userTokenService: UserTokenService,
@@ -36,35 +41,16 @@ export class ChromeLogin{
         this.token = userDetail[1]
         this.calendarService.getEvents(this.userDetail.email, this.token)
           .then(events =>{
-            console.log(events)
+            this.events=  events.items.filter(event =>{
+              for (let i = 0; i< this.types.length; i++){
+                if (event.summary.includes(this.types[i])) {
+                  return true
+                }
+              }
+              return false
+            })
           })
       })
-  }
-
-  createEvent(
-    type: string,
-    summary:string,
-    startDatetime: string,
-    ): Event {
-    return {
-      'summary': type + ':' + summary,
-      'start': {
-        'dateTime': startDatetime,
-        'timeZone': Intl.DateTimeFormat().resolvedOptions().timeZone
-      },
-      'end': {
-        'dateTime': startDatetime,
-        'timeZone': Intl.DateTimeFormat().resolvedOptions().timeZone
-      },
-
-      'attendees': [],
-      'reminders': {
-        'useDefault': false,
-        'overrides': [
-          {'method': 'popup', 'minutes': 24 * 60},
-        ]
-      }
-     }
   }
 
   private handleError(error:any): Promise<any>{
