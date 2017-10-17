@@ -1,9 +1,10 @@
 <div>
     <button (click)="getListofEvents()"> Calender Login </button>
     <ul>
-      <li *ngFor="let item of events | paginate: { itemsPerPage: 3, currentPage: page }">
-        {{item.summary}}
-      </li>
+      <div *ngFor="let item of events | paginate: { itemsPerPage: 3, currentPage: page }">
+        <p>{{item.summary}}</p>
+        <button (click)="deleteEvent(item)">x</button>
+      </div>
     </ul>
     <pagination-controls (pageChange)="page = $event"></pagination-controls>
 </div>

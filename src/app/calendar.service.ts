@@ -29,6 +29,14 @@ export class CalendarService{
       .catch(this.handleError)
   }
 
+  deleteEvent(calendar:string, event:string, token:string): Promise<any> {
+      let delete_event ='/calendars/'+ calendar + '/events/'+event+'?access_token=' + token
+      return this.http.delete(this.url+ delete_event)
+        .toPromise()
+        .then(response=> response.json())
+        .catch(this.handleError)
+  }
+
 
   private handleError(error:any): Promise<any> {
     console.log('Error has occured', error)
