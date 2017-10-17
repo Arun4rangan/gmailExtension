@@ -170,6 +170,13 @@ var CalendarService = (function () {
             .then(function (response) { return response.json(); })
             .catch(this.handleError);
     };
+    CalendarService.prototype.deleteEvent = function (calendar, event, token) {
+        var delete_event = '/calendars/' + calendar + '/events/' + event + '?access_token=' + token;
+        return this.http.delete(this.url + delete_event)
+            .toPromise()
+            .then(function (response) { return response.json(); })
+            .catch(this.handleError);
+    };
     CalendarService.prototype.handleError = function (error) {
         console.log('Error has occured', error);
         return Promise.reject(error.message || error);
@@ -303,7 +310,7 @@ var _a, _b;
 /***/ "../../../../../src/app/task-list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>\n    <button (click)=\"getListofEvents()\"> Calender Login </button>\n    <ul>\n      <li *ngFor=\"let item of events | paginate: { itemsPerPage: 3, currentPage: page }\">\n        {{item.summary}}\n      </li>\n    </ul>\n    <pagination-controls (pageChange)=\"page = $event\"></pagination-controls>\n</div>"
+module.exports = "<div>\n    <button (click)=\"getListofEvents()\"> Calender Login </button>\n    <ul>\n      <div *ngFor=\"let item of events | paginate: { itemsPerPage: 3, currentPage: page }\">\n        <p>{{item.summary}}</p>\n        <button (click)=\"deleteEvent(item)\">x</button>\n      </div>\n    </ul>\n    <pagination-controls (pageChange)=\"page = $event\"></pagination-controls>\n</div>"
 
 /***/ }),
 
@@ -359,6 +366,13 @@ var TaskListComponent = (function () {
                     return false;
                 });
             });
+        });
+    };
+    TaskListComponent.prototype.deleteEvent = function (event) {
+        console.log(event);
+        this.calendarService.deleteEvent(event.creator.email, event.id, this.token)
+            .then(function (data) {
+            console.log(data);
         });
     };
     TaskListComponent.prototype.handleError = function (error) {

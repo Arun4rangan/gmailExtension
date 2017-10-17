@@ -18,7 +18,7 @@ export class TaskListComponent{
   private userDetail: any={};
   private calendar: string;
   private types = ['homework', 'task','project'];
-  private events: Event[];
+  private events: any[];
 
   constructor (
     private userTokenService: UserTokenService,
@@ -50,6 +50,14 @@ export class TaskListComponent{
               return false
             })
           })
+      })
+  }
+
+  deleteEvent(event:any):void {
+    console.log(event)
+    this.calendarService.deleteEvent(event.creator.email, event.id, this.token)
+      .then(data=>{
+        console.log(data)
       })
   }
 
