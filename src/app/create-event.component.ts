@@ -44,6 +44,7 @@ export class CreateEventComponent {
         this.calendarService.createEvent(this.userDetail.email, this.token, event)
           .then(data =>{
             console.log(data)
+            console.log('getting created')
             this.onInsert.emit(null)
           })
       })
@@ -54,7 +55,7 @@ export class CreateEventComponent {
       throw "Summary cannot be undefined"
     }
     return {
-      'summary': this.type + ' : ' + this.summary,
+      'summary': this.type + ':' + this.summary,
       'start': {
         'dateTime': new Date(this.startDatetime).toISOString(),
         'timeZone': Intl.DateTimeFormat().resolvedOptions().timeZone

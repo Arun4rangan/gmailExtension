@@ -266,6 +266,7 @@ var CreateEventComponent = (function () {
             _this.calendarService.createEvent(_this.userDetail.email, _this.token, event)
                 .then(function (data) {
                 console.log(data);
+                console.log('getting created');
                 _this.onInsert.emit(null);
             });
         });
@@ -275,7 +276,7 @@ var CreateEventComponent = (function () {
             throw "Summary cannot be undefined";
         }
         return {
-            'summary': this.type + ' : ' + this.summary,
+            'summary': this.type + ':' + this.summary,
             'start': {
                 'dateTime': new Date(this.startDatetime).toISOString(),
                 'timeZone': Intl.DateTimeFormat().resolvedOptions().timeZone
