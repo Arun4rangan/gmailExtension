@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, EventEmitter, Output } from '@angular/core'
 
 import { Event } from './event'
 
@@ -32,6 +32,8 @@ export class CreateEventComponent {
 
   }
 
+  @Output() onInsert = new EventEmitter()
+
   insertEventInCalender(): void {
     let event = this.createEvent()
     let userPromise = this.getUser()
@@ -42,6 +44,7 @@ export class CreateEventComponent {
         this.calendarService.createEvent(this.userDetail.email, this.token, event)
           .then(data =>{
             console.log(data)
+            this.onInsert.emit(null)
           })
       })
   }
