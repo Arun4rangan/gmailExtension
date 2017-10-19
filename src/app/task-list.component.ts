@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 
 import { UserTokenService } from './user-token.service'
 import { CalendarService } from './calendar.service'
@@ -12,7 +12,7 @@ import {} from '@types/gapi'
   templateUrl:'./task-list.component.html',
 })
 
-export class TaskListComponent{
+export class TaskListComponent implements OnInit{
   private page: number = 1;
   private token: string;
   private userDetail: any={};
@@ -30,7 +30,10 @@ export class TaskListComponent{
       this.userTokenService.getUserInfo(),
       this.userTokenService.getIdentity()
      ]
+  }
 
+  ngOnInit() {
+    this.getListofEvents()
   }
 
   getListofEvents(): void {
@@ -41,7 +44,9 @@ export class TaskListComponent{
         this.token = userDetail[1]
         this.calendarService.getEvents(this.userDetail.email, this.token)
           .then(events =>{
+            console.log(events)
             this.events=  events.items.filter(event =>{
+              console.log(event.summary)
               for (let i = 0; i< this.types.length; i++){
                 if (event.summary.includes(this.types[i])) {
                   return true
@@ -49,21 +54,28 @@ export class TaskListComponent{
               }
               return false
             })
-          })
-      })
+          }).catch(error=>{this.handleError(error, 'getEvents')})
+      }).catch(error=>{this.handleError(error, 'userDetails')})
   }
 
   deleteEvent(event:any):void {
-    console.log(event)
     this.calendarService.deleteEvent(event.creator.email, event.id, this.token)
       .then(data=>{
-        console.log(data)
+        this.events = this.events.filter(array_event=>{
+          if (array_event != event){
+            return true
+          } else{
+            return false
+          }
+        })
       })
+      .catch(error =>{this.handleError(error, 'deleteEvent')})
   }
 
-  private handleError(error:any): Promise<any>{
-   console.log('Error has occured', error)
-   return Promise.reject(error.message|| error)
+  private handleError(error:any, location:string): Promise<any>{
+    console.log('Error has occured in'+ location)
+    console.log('Error has occured', error)
+    return Promise.reject(error.message|| error)
   }
 
 }

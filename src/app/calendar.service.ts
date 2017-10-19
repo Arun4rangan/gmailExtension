@@ -15,6 +15,7 @@ export class CalendarService{
 
   getEvents(calendar: string, token: string): Promise<any> {
     let get_event = '/calendars/'+ calendar +'/events?access_token=' + token
+    console.log(this.url+get_event)
     return this.http.get(this.url+get_event)
       .toPromise()
       .then(response => response.json())

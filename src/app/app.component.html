@@ -4,6 +4,6 @@
     {{title}}!
   </h1>
 </div>
-<create-event></create-event>
-<tasks-list></tasks-list>
+<create-event (onInsert)="taskList.getListofEvents()"></create-event>
+<tasks-list #taskList></tasks-list>
 
