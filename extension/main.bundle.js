@@ -158,6 +158,7 @@ var CalendarService = (function () {
     }
     CalendarService.prototype.getEvents = function (calendar, token) {
         var get_event = '/calendars/' + calendar + '/events?access_token=' + token;
+        console.log(this.url + get_event);
         return this.http.get(this.url + get_event)
             .toPromise()
             .then(function (response) { return response.json(); })
@@ -214,7 +215,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/create-event.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"grid grid-pad\">\n  <select [(ngModel)]=\"type\">\n    <option *ngFor=\"let type of types\">{{type}}</option>\n  </select>\n  <input [(ngModel)]=\"summary\">\n  <input [(ngModel)]=\"startDatetime\">\n  <button (click)=\"insertEventInCalender()\">Create</button>\n</div>"
+module.exports = "<div class=\"grid grid-pad\">\n  <select [(ngModel)]=\"type\">\n    <option *ngFor=\"let type of types\">{{type}}</option>\n  </select>\n  <input [(ngModel)]=\"summary\" placeholder=\"summary\" type=\"text\" required=\"true\">\n  <input [(ngModel)]=\"startDatetime\" type=\"date\">\n  <button (click)=\"insertEventInCalender()\">Create</button>\n</div>"
 
 /***/ }),
 
@@ -242,7 +243,9 @@ var CreateEventComponent = (function () {
     function CreateEventComponent(userTokenService, calendarService) {
         this.userTokenService = userTokenService;
         this.calendarService = calendarService;
-        this.types = ['homework', 'task', 'project'];
+        this.type = 'Homework';
+        this.startDatetime = new Date().toISOString().slice(0, 10);
+        this.types = ['Homework', 'Task', 'Project'];
         this.userDetail = {};
         this.onInsert = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["w" /* EventEmitter */]();
     }
@@ -263,11 +266,15 @@ var CreateEventComponent = (function () {
             _this.calendarService.createEvent(_this.userDetail.email, _this.token, event)
                 .then(function (data) {
                 console.log(data);
+                console.log('getting created');
                 _this.onInsert.emit(null);
             });
         });
     };
     CreateEventComponent.prototype.createEvent = function () {
+        if (!this.summary) {
+            throw "Summary cannot be undefined";
+        }
         return {
             'summary': this.type + ':' + this.summary,
             'start': {
@@ -354,6 +361,9 @@ var TaskListComponent = (function () {
             this.userTokenService.getIdentity()
         ];
     };
+    TaskListComponent.prototype.ngOnInit = function () {
+        this.getListofEvents();
+    };
     TaskListComponent.prototype.getListofEvents = function () {
         var _this = this;
         var userPromise = this.getUser();
@@ -363,7 +373,9 @@ var TaskListComponent = (function () {
             _this.token = userDetail[1];
             _this.calendarService.getEvents(_this.userDetail.email, _this.token)
                 .then(function (events) {
+                console.log(events);
                 _this.events = events.items.filter(function (event) {
+                    console.log(event.summary);
                     for (var i = 0; i < _this.types.length; i++) {
                         if (event.summary.includes(_this.types[i])) {
                             return true;

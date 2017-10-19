@@ -12,10 +12,10 @@ import { CalendarService } from './calendar.service'
   styleUrls: [ './create-event.component.css' ]
 })
 export class CreateEventComponent {
-  private type:string;
+  private type:string = 'Homework'
   private summary:string;
-  private startDatetime: string;
-  private types = ['homework', 'task','project']
+  private startDatetime: string = new Date().toISOString().slice(0, 10);
+  private types = ['Homework', 'Task','Project']
   private token: string;
   private userDetail: any={};
 
@@ -44,12 +44,16 @@ export class CreateEventComponent {
         this.calendarService.createEvent(this.userDetail.email, this.token, event)
           .then(data =>{
             console.log(data)
+            console.log('getting created')
             this.onInsert.emit(null)
           })
       })
   }
 
   createEvent(): Event {
+    if (!this.summary){
+      throw "Summary cannot be undefined"
+    }
     return {
       'summary': this.type + ':' + this.summary,
       'start': {
