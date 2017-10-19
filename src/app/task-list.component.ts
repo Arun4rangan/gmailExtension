@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 
 import { UserTokenService } from './user-token.service'
 import { CalendarService } from './calendar.service'
@@ -12,7 +12,7 @@ import {} from '@types/gapi'
   templateUrl:'./task-list.component.html',
 })
 
-export class TaskListComponent{
+export class TaskListComponent implements OnInit{
   private page: number = 1;
   private token: string;
   private userDetail: any={};
@@ -30,7 +30,10 @@ export class TaskListComponent{
       this.userTokenService.getUserInfo(),
       this.userTokenService.getIdentity()
      ]
+  }
 
+  ngOnInit() {
+    this.getListofEvents()
   }
 
   getListofEvents(): void {

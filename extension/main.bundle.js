@@ -214,7 +214,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/create-event.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"grid grid-pad\">\n  <select [(ngModel)]=\"type\">\n    <option *ngFor=\"let type of types\">{{type}}</option>\n  </select>\n  <input [(ngModel)]=\"summary\">\n  <input [(ngModel)]=\"startDatetime\">\n  <button (click)=\"insertEventInCalender()\">Create</button>\n</div>"
+module.exports = "<div class=\"grid grid-pad\">\n  <select [(ngModel)]=\"type\">\n    <option *ngFor=\"let type of types\">{{type}}</option>\n  </select>\n  <input [(ngModel)]=\"summary\" placeholder=\"summary\" type=\"text\" required=\"true\">\n  <input [(ngModel)]=\"startDatetime\" type=\"date\">\n  <button (click)=\"insertEventInCalender()\">Create</button>\n</div>"
 
 /***/ }),
 
@@ -242,7 +242,9 @@ var CreateEventComponent = (function () {
     function CreateEventComponent(userTokenService, calendarService) {
         this.userTokenService = userTokenService;
         this.calendarService = calendarService;
-        this.types = ['homework', 'task', 'project'];
+        this.type = 'Homework';
+        this.startDatetime = new Date().toISOString().slice(0, 10);
+        this.types = ['Homework', 'Task', 'Project'];
         this.userDetail = {};
         this.onInsert = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["w" /* EventEmitter */]();
     }
@@ -268,8 +270,11 @@ var CreateEventComponent = (function () {
         });
     };
     CreateEventComponent.prototype.createEvent = function () {
+        if (!this.summary) {
+            throw "Summary cannot be undefined";
+        }
         return {
-            'summary': this.type + ':' + this.summary,
+            'summary': this.type + ' : ' + this.summary,
             'start': {
                 'dateTime': new Date(this.startDatetime).toISOString(),
                 'timeZone': Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -353,6 +358,9 @@ var TaskListComponent = (function () {
             this.userTokenService.getUserInfo(),
             this.userTokenService.getIdentity()
         ];
+    };
+    TaskListComponent.prototype.ngOnInit = function () {
+        this.getListofEvents();
     };
     TaskListComponent.prototype.getListofEvents = function () {
         var _this = this;
