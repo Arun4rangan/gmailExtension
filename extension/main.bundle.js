@@ -158,6 +158,7 @@ var CalendarService = (function () {
     }
     CalendarService.prototype.getEvents = function (calendar, token) {
         var get_event = '/calendars/' + calendar + '/events?access_token=' + token;
+        console.log(this.url + get_event);
         return this.http.get(this.url + get_event)
             .toPromise()
             .then(function (response) { return response.json(); })
@@ -371,7 +372,9 @@ var TaskListComponent = (function () {
             _this.token = userDetail[1];
             _this.calendarService.getEvents(_this.userDetail.email, _this.token)
                 .then(function (events) {
+                console.log(events);
                 _this.events = events.items.filter(function (event) {
+                    console.log(event.summary);
                     for (var i = 0; i < _this.types.length; i++) {
                         if (event.summary.includes(_this.types[i])) {
                             return true;

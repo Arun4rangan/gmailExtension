@@ -44,7 +44,9 @@ export class TaskListComponent implements OnInit{
         this.token = userDetail[1]
         this.calendarService.getEvents(this.userDetail.email, this.token)
           .then(events =>{
+            console.log(events)
             this.events=  events.items.filter(event =>{
+              console.log(event.summary)
               for (let i = 0; i< this.types.length; i++){
                 if (event.summary.includes(this.types[i])) {
                   return true
