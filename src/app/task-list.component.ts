@@ -49,21 +49,28 @@ export class TaskListComponent{
               }
               return false
             })
-          })
-      })
+          }).catch(error=>{this.handleError(error, 'getEvents')})
+      }).catch(error=>{this.handleError(error, 'userDetails')})
   }
 
   deleteEvent(event:any):void {
-    console.log(event)
     this.calendarService.deleteEvent(event.creator.email, event.id, this.token)
       .then(data=>{
-        console.log(data)
+        this.events = this.events.filter(array_event=>{
+          if (array_event != event){
+            return true
+          } else{
+            return false
+          }
+        })
       })
+      .catch(error =>{this.handleError(error, 'deleteEvent')})
   }
 
-  private handleError(error:any): Promise<any>{
-   console.log('Error has occured', error)
-   return Promise.reject(error.message|| error)
+  private handleError(error:any, location:string): Promise<any>{
+    console.log('Error has occured in'+ location)
+    console.log('Error has occured', error)
+    return Promise.reject(error.message|| error)
   }
 
 }

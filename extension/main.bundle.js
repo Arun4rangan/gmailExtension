@@ -34,7 +34,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div style=\"text-align:center\">\n  <h1>\n    {{title}}!\n  </h1>\n</div>\n<create-event></create-event>\n<tasks-list></tasks-list>\n\n"
+module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div style=\"text-align:center\">\n  <h1>\n    {{title}}!\n  </h1>\n</div>\n<create-event (onInsert)=\"taskList.getListofEvents()\"></create-event>\n<tasks-list #taskList></tasks-list>\n\n"
 
 /***/ }),
 
@@ -244,6 +244,7 @@ var CreateEventComponent = (function () {
         this.calendarService = calendarService;
         this.types = ['homework', 'task', 'project'];
         this.userDetail = {};
+        this.onInsert = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["w" /* EventEmitter */]();
     }
     CreateEventComponent.prototype.getUser = function () {
         return [
@@ -262,6 +263,7 @@ var CreateEventComponent = (function () {
             _this.calendarService.createEvent(_this.userDetail.email, _this.token, event)
                 .then(function (data) {
                 console.log(data);
+                _this.onInsert.emit(null);
             });
         });
     };
@@ -292,6 +294,10 @@ var CreateEventComponent = (function () {
     };
     return CreateEventComponent;
 }());
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["R" /* Output */])(),
+    __metadata("design:type", Object)
+], CreateEventComponent.prototype, "onInsert", void 0);
 CreateEventComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'create-event',
@@ -365,17 +371,26 @@ var TaskListComponent = (function () {
                     }
                     return false;
                 });
-            });
-        });
+            }).catch(function (error) { _this.handleError(error, 'getEvents'); });
+        }).catch(function (error) { _this.handleError(error, 'userDetails'); });
     };
     TaskListComponent.prototype.deleteEvent = function (event) {
-        console.log(event);
+        var _this = this;
         this.calendarService.deleteEvent(event.creator.email, event.id, this.token)
             .then(function (data) {
-            console.log(data);
-        });
+            _this.events = _this.events.filter(function (array_event) {
+                if (array_event != event) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
+        })
+            .catch(function (error) { _this.handleError(error, 'deleteEvent'); });
     };
-    TaskListComponent.prototype.handleError = function (error) {
+    TaskListComponent.prototype.handleError = function (error, location) {
+        console.log('Error has occured in' + location);
         console.log('Error has occured', error);
         return Promise.reject(error.message || error);
     };
