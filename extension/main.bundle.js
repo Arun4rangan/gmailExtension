@@ -269,6 +269,7 @@ var CreateEventComponent = (function () {
             _this.calendarService.createEvent(_this.userDetail.email, _this.token, event)
                 .then(function (data) {
                 console.log(data);
+                console.log('getting created');
                 _this.onInsert.emit(null);
             });
         });
