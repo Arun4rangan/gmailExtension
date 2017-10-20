@@ -1,11 +1,11 @@
 {
     "name": "gTasker Extension",
     "manifest_version": 2,
-    "description": "Sync with Couchbase in a Google Chrome extension",
+    "description": "Add and remove tasks on google calendar via chrome extension",
     "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArxSbbeKSnNe6jml4+o9U80oFTpTzzZYe+8S9Bh5n/Ky3Kcs8dV7/+RIvAz3wCUViKuEsRuu4SFIqrl0kFBF1/Iq3oedEp0f7CPmhmchlkNtYLIR9odZkTg22rG2Wcvjnqkq9TnHAm9S8abpAeNsrrJFWkDEtFL5W4rglJ0bhPUpnVpC1OK1SVr9wdosvUHDLRBNsxffweZ3ynzl08iEDyRbYpevE2lL8BE0C/OcbunMv+gUSOpJutKSE6nLHLlUZBxAF5ustVPvA6PzxnSfz1+wau+0cxS5iiz/GfznRz5ei4jpDidHWHLCNFOCGejzFmz9rwAJK+tFEcVW/WPQPGQIDAQAB",
-    "version": "1.0",
+    "version": "0.0.0.1",
     "browser_action": {
-        "default_icon": "favicon.ico",
+        "default_icon": "Icon-60@2x.png",
         "default_popup": "index.html"
     },
     "permissions": [
