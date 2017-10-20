@@ -13,8 +13,11 @@ export class CalendarService{
 
   constructor(private http: Http){}
 
-  getEvents(calendar: string, token: string): Promise<any> {
+  getEvents(calendar: string, token: string, pageToken: string): Promise<any> {
     let get_event = '/calendars/'+ calendar +'/events?access_token=' + token
+    if (pageToken){
+      get_event = get_event + '&pageToken=' + pageToken
+    }
     return this.http.get(this.url+get_event)
       .toPromise()
       .then(response => response.json())

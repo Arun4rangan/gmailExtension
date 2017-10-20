@@ -34,7 +34,8 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div style=\"text-align:center\">\n  <h1>\n    {{title}}!\n  </h1>\n</div>\n<create-event (onInsert)=\"taskList.getListofEvents()\"></create-event>\n<tasks-list #taskList></tasks-list>\n\n"
+module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div style=\"text-align:center\">\n  <h1>\n    {{title}}!\n  </h1>\n</div>\n<create-event (onInsert)=\"taskList.setListofEvents()\"></create-event>\n<tasks-list #taskList></tasks-list>\n\n"
+
 
 /***/ }),
 
@@ -156,8 +157,11 @@ var CalendarService = (function () {
         this.http = http;
         this.url = 'https://www.googleapis.com/calendar/v3';
     }
-    CalendarService.prototype.getEvents = function (calendar, token) {
+    CalendarService.prototype.getEvents = function (calendar, token, pageToken) {
         var get_event = '/calendars/' + calendar + '/events?access_token=' + token;
+        if (pageToken) {
+            get_event = get_event + '&pageToken=' + pageToken;
+        }
         return this.http.get(this.url + get_event)
             .toPromise()
             .then(function (response) { return response.json(); })
@@ -214,7 +218,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/create-event.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"grid grid-pad\">\n  <select [(ngModel)]=\"type\">\n    <option *ngFor=\"let type of types\">{{type}}</option>\n  </select>\n  <input [(ngModel)]=\"summary\">\n  <input [(ngModel)]=\"startDatetime\">\n  <button (click)=\"insertEventInCalender()\">Create</button>\n</div>"
+module.exports = "<div class=\"grid grid-pad\">\n  <select [(ngModel)]=\"type\">\n    <option *ngFor=\"let type of types\">{{type}}</option>\n  </select>\n  <input [(ngModel)]=\"summary\" placeholder=\"summary\" type=\"text\" required=\"true\">\n  <input [(ngModel)]=\"startDatetime\" type=\"date\">\n  <button (click)=\"insertEventInCalender()\">Create</button>\n</div>"
 
 /***/ }),
 
@@ -242,7 +246,9 @@ var CreateEventComponent = (function () {
     function CreateEventComponent(userTokenService, calendarService) {
         this.userTokenService = userTokenService;
         this.calendarService = calendarService;
-        this.types = ['homework', 'task', 'project'];
+        this.type = 'Homework';
+        this.startDatetime = new Date().toISOString().slice(0, 10);
+        this.types = ['Homework', 'Task', 'Project'];
         this.userDetail = {};
         this.onInsert = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["w" /* EventEmitter */]();
     }
@@ -268,6 +274,9 @@ var CreateEventComponent = (function () {
         });
     };
     CreateEventComponent.prototype.createEvent = function () {
+        if (!this.summary) {
+            throw "Summary cannot be undefined";
+        }
         return {
             'summary': this.type + ':' + this.summary,
             'start': {
@@ -316,7 +325,7 @@ var _a, _b;
 /***/ "../../../../../src/app/task-list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>\n    <button (click)=\"getListofEvents()\"> Calender Login </button>\n    <ul>\n      <div *ngFor=\"let item of events | paginate: { itemsPerPage: 3, currentPage: page }\">\n        <p>{{item.summary}}</p>\n        <button (click)=\"deleteEvent(item)\">x</button>\n      </div>\n    </ul>\n    <pagination-controls (pageChange)=\"page = $event\"></pagination-controls>\n</div>"
+module.exports = "<div>\n    <div *ngFor=\"let item of events | paginate: { itemsPerPage: 3, currentPage: page }\">\n      <p>{{item.summary}}</p>\n      <button (click)=\"deleteEvent(item)\">x</button>\n    </div>\n    <pagination-controls (pageChange)=\"page = $event\"></pagination-controls>\n</div>"
 
 /***/ }),
 
@@ -346,7 +355,8 @@ var TaskListComponent = (function () {
         this.calendarService = calendarService;
         this.page = 1;
         this.userDetail = {};
-        this.types = ['homework', 'task', 'project'];
+        this.types = ['Homework', 'Task', 'Project'];
+        this.eventCall = null;
     }
     TaskListComponent.prototype.getUser = function () {
         return [
@@ -354,25 +364,40 @@ var TaskListComponent = (function () {
             this.userTokenService.getIdentity()
         ];
     };
-    TaskListComponent.prototype.getListofEvents = function () {
+    TaskListComponent.prototype.ngOnInit = function () {
+        this.setListofEvents();
+    };
+    TaskListComponent.prototype.setListofEvents = function () {
         var _this = this;
+        this.events = [];
         var userPromise = this.getUser();
         Promise.all(userPromise)
             .then(function (userDetail) {
             _this.userDetail = userDetail[0];
             _this.token = userDetail[1];
-            _this.calendarService.getEvents(_this.userDetail.email, _this.token)
-                .then(function (events) {
-                _this.events = events.items.filter(function (event) {
-                    for (var i = 0; i < _this.types.length; i++) {
-                        if (event.summary.includes(_this.types[i])) {
-                            return true;
-                        }
-                    }
-                    return false;
-                });
-            }).catch(function (error) { _this.handleError(error, 'getEvents'); });
+            _this.getListofEvents(null);
         }).catch(function (error) { _this.handleError(error, 'userDetails'); });
+    };
+    TaskListComponent.prototype.getListofEvents = function (nextPage) {
+        var _this = this;
+        this.eventCall = this.calendarService.getEvents(this.userDetail.email, this.token, nextPage);
+        this.eventCall.then(function (events) {
+            var filtered_events = events.items.filter(function (event) {
+                for (var i = 0; i < _this.types.length; i++) {
+                    if (event.summary.includes(_this.types[i])) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+            _this.events.push.apply(_this.events, filtered_events);
+            if (events.nextPageToken) {
+                _this.getListofEvents(events.nextPageToken);
+            }
+            else {
+                return;
+            }
+        }).catch(function (error) { _this.handleError(error, 'getEvents'); });
     };
     TaskListComponent.prototype.deleteEvent = function (event) {
         var _this = this;
