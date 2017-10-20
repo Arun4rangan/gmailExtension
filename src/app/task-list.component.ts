@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 
 import { UserTokenService } from './user-token.service'
 import { CalendarService } from './calendar.service'
@@ -12,13 +12,14 @@ import {} from '@types/gapi'
   templateUrl:'./task-list.component.html',
 })
 
-export class TaskListComponent{
+export class TaskListComponent implements OnInit{
   private page: number = 1;
   private token: string;
   private userDetail: any={};
   private calendar: string;
-  private types = ['homework', 'task','project'];
+  private types = ['Homework', 'Task','Project'];
   private events: any[];
+  private eventCall = null;
 
   constructor (
     private userTokenService: UserTokenService,
@@ -30,27 +31,44 @@ export class TaskListComponent{
       this.userTokenService.getUserInfo(),
       this.userTokenService.getIdentity()
      ]
-
   }
 
-  getListofEvents(): void {
+  ngOnInit() {
+    this.setListofEvents()
+  }
+
+  setListofEvents():void{
+    this.events= []
     let userPromise = this.getUser()
     Promise.all(userPromise)
       .then(userDetail=>{
         this.userDetail = userDetail[0]
         this.token = userDetail[1]
-        this.calendarService.getEvents(this.userDetail.email, this.token)
-          .then(events =>{
-            this.events=  events.items.filter(event =>{
-              for (let i = 0; i< this.types.length; i++){
-                if (event.summary.includes(this.types[i])) {
-                  return true
-                }
-              }
-              return false
-            })
-          }).catch(error=>{this.handleError(error, 'getEvents')})
+        this.getListofEvents(null)
       }).catch(error=>{this.handleError(error, 'userDetails')})
+  }
+
+  getListofEvents(nextPage: any): void {
+    this.eventCall = this.calendarService.getEvents(
+      this.userDetail.email,
+      this.token,
+      nextPage)
+    this.eventCall.then(events =>{
+      let filtered_events = events.items.filter(event =>{
+        for (let i = 0; i< this.types.length; i++){
+          if (event.summary.includes(this.types[i])) {
+            return true
+          }
+        }
+        return false
+      })
+      this.events.push.apply(this.events,filtered_events)
+      if(events.nextPageToken){
+        this.getListofEvents(events.nextPageToken)
+      } else{
+        return
+      }
+    }).catch(error=>{this.handleError(error, 'getEvents')})
   }
 
   deleteEvent(event:any):void {
