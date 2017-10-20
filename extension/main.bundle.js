@@ -36,6 +36,7 @@ module.exports = module.exports.toString();
 
 module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div style=\"text-align:center\">\n  <h1>\n    {{title}}!\n  </h1>\n</div>\n<create-event (onInsert)=\"taskList.setListofEvents()\"></create-event>\n<tasks-list #taskList></tasks-list>\n\n"
 
+
 /***/ }),
 
 /***/ "../../../../../src/app/app.component.ts":
@@ -268,7 +269,6 @@ var CreateEventComponent = (function () {
             _this.calendarService.createEvent(_this.userDetail.email, _this.token, event)
                 .then(function (data) {
                 console.log(data);
-                console.log('getting created');
                 _this.onInsert.emit(null);
             });
         });
