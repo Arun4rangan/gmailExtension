@@ -204,7 +204,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "select {\n  -webkit-appearance: button;\n  -webkit-padding-end: 20px;\n  -webkit-padding-start: 2px;\n  -webkit-user-select: none;\n  background-image: url(http://i62.tinypic.com/15xvbd5.png);\n  background-color: #FFFFFF;\n  background-position: 97% center;\n  background-repeat: no-repeat;\n  border: 1px solid #AAA;\n  color: #B22222;\n  overflow: hidden;\n  padding: 3px 3px;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  width: 154px;\n  font-size: 13px;\n  font-weight: 200;\n}\n\n#summary{\n  color: #B22222;\n  padding: 3px 3px;\n  width: 144px;\n  font-size: 13px;\n  font-weight: 200;\n}\n\n#date{\n  color: #B22222;\n  font-size: 13px;\n  font-weight: 200;\n  width: 149px;\n}\n\n#create{\n  margin-top:2px;\n  background-color: #2199e8;\n  border: none;\n  color:#fefefe;\n  padding:0.1875rem 0.625rem;\n}", ""]);
+exports.push([module.i, "select {\n  -webkit-appearance: button;\n  -webkit-padding-end: 20px;\n  -webkit-padding-start: 2px;\n  -webkit-user-select: none;\n  background-image: url(http://i62.tinypic.com/15xvbd5.png);\n  background-color: #FFFFFF;\n  background-position: 97% center;\n  background-repeat: no-repeat;\n  border: 1px solid #AAA;\n  color: #B22222;\n  overflow: hidden;\n  padding: 3px 3px;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  width: 154px;\n  font-size: 13px;\n  font-weight: 200;\n  cursor: pointer;\n}\n\n#summary{\n  color: #B22222;\n  padding: 3px 3px;\n  width: 144px;\n  font-size: 13px;\n  font-weight: 200;\n}\n\n#date{\n  color: #B22222;\n  font-size: 13px;\n  font-weight: 200;\n  width: 149px;\n}\n\n#create{\n  margin-top:2px;\n  background-color: #2199e8;\n  border: none;\n  color:#fefefe;\n  padding:0.1875rem 0.625rem;\n  cursor: pointer;\n}", ""]);
 
 // exports
 
@@ -217,7 +217,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/create-event.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"grid grid-pad\">\n  <select [(ngModel)]=\"type\">\n    <option *ngFor=\"let type of types\">{{type}}</option>\n  </select>\n  <input [(ngModel)]=\"summary\" placeholder=\"summary\" type=\"text\" required=\"true\" id=\"summary\">\n  <input [(ngModel)]=\"startDatetime\" type=\"date\" id=\"date\">\n  <button (click)=\"insertEventInCalender()\" id=\"create\">Create</button>\n</div>"
+module.exports = "<div class=\"grid grid-pad\">\n  <select [(ngModel)]=\"type\">\n    <option *ngFor=\"let type of types\">{{type}}</option>\n  </select>\n  <input [(ngModel)]=\"summary\" placeholder=\"Summary\" type=\"text\" required=\"true\" id=\"summary\">\n  <input [(ngModel)]=\"startDatetime\" type=\"date\" id=\"date\">\n  <button (click)=\"insertEventInCalender()\" id=\"create\">Create</button>\n</div>"
 
 /***/ }),
 
@@ -330,7 +330,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".eventSummary {\n  color: #B22222;\n  font-size: 13px;\n  font-weight: 200;\n}\n\n.event {\n  border-top: thin #B22222\n}\n\n.delete {\n  display: inline-block;\n  background: white; /* W3C */\n  border: 1px solid #a1a1a1;\n  font: bold 1em/2em Arial, Helvetica;\n  text-decoration: none;\n  color: #333;\n}", ""]);
+exports.push([module.i, ".eventSummary {\n  color: #B22222;\n  font-size: 13px;\n  font-weight: 200;\n  margin-top: 8px;\n}\n\n.event {\n  border-top: thin #B22222\n}\n\n.delete {\n  display: inline-block;\n  background: white; /* W3C */\n  border: 1px solid #a1a1a1;\n  font: bold 1em/2em Arial, Helvetica;\n  text-decoration: none;\n  color: #333;\n  cursor: pointer;\n}", ""]);
 
 // exports
 
@@ -343,7 +343,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/task-list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>\n    <div *ngFor=\"let item of events | paginate: { itemsPerPage: 3, currentPage: page }\" class=\"event\">\n      <p class=\"eventSummary\">{{item.summary}}</p>\n      <button (click)=\"deleteEvent(item)\" class=\"delete\">x</button>\n    </div>\n    <pagination-controls (pageChange)=\"page = $event\"></pagination-controls>\n</div>"
+module.exports = "<div>\n    <div *ngFor=\"let item of events | paginate: { itemsPerPage: 3, currentPage: page }\" class=\"event\">\n      <div style=\"float:left;width:70%;vertical-align:top\">\n        <p class=\"eventSummary\">{{item.summary}}</p>\n      </div>\n      <div style=\"float:right;vertical-align:top\">\n        <button (click)=\"deleteEvent(item)\" class=\"delete\">x</button>\n      </div>\n    </div>\n    <pagination-controls (pageChange)=\"page = $event\"></pagination-controls>\n</div>"
 
 /***/ }),
 

@@ -16,6 +16,7 @@ select {
   width: 154px;
   font-size: 13px;
   font-weight: 200;
+  cursor: pointer;
 }
 
 #summary{
@@ -39,4 +40,5 @@ select {
   border: none;
   color:#fefefe;
   padding:0.1875rem 0.625rem;
+  cursor: pointer;
 }

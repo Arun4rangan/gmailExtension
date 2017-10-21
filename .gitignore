@@ -1,5 +1,10 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+# Project Secrets
+./extension.pem
+./extension_build.pem
+./extension.crx
+
 # compiled output
 /dist
 /tmp
