@@ -2,7 +2,7 @@
   <select [(ngModel)]="type">
     <option *ngFor="let type of types">{{type}}</option>
   </select>
-  <input [(ngModel)]="summary" placeholder="summary" type="text" required="true">
-  <input [(ngModel)]="startDatetime" type="date">
-  <button (click)="insertEventInCalender()">Create</button>
+  <input [(ngModel)]="summary" placeholder="summary" type="text" required="true" id="summary">
+  <input [(ngModel)]="startDatetime" type="date" id="date">
+  <button (click)="insertEventInCalender()" id="create">Create</button>
 </div>

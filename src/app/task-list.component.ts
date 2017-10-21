@@ -10,6 +10,7 @@ import {} from '@types/gapi'
 @Component({
   selector:'tasks-list',
   templateUrl:'./task-list.component.html',
+  styleUrls: ['./task-list.component.css']
 })
 
 export class TaskListComponent implements OnInit{
@@ -19,6 +20,7 @@ export class TaskListComponent implements OnInit{
   private calendar: string;
   private types = ['Homework', 'Task','Project'];
   private events: any[];
+  private intermediateEvents: any[];
   private eventCall = null;
 
   constructor (
@@ -38,13 +40,16 @@ export class TaskListComponent implements OnInit{
   }
 
   setListofEvents():void{
-    this.events= []
+    this.intermediateEvents = [];
     let userPromise = this.getUser()
     Promise.all(userPromise)
       .then(userDetail=>{
         this.userDetail = userDetail[0]
         this.token = userDetail[1]
         this.getListofEvents(null)
+        console.log(this.events)
+        this.events= this.intermediateEvents
+        console.log(this.events)
       }).catch(error=>{this.handleError(error, 'userDetails')})
   }
 
@@ -56,13 +61,13 @@ export class TaskListComponent implements OnInit{
     this.eventCall.then(events =>{
       let filtered_events = events.items.filter(event =>{
         for (let i = 0; i< this.types.length; i++){
-          if (event.summary.includes(this.types[i])) {
+          if (event.summary.indexOf(this.types[i]) != -1) {
             return true
           }
         }
         return false
       })
-      this.events.push.apply(this.events,filtered_events)
+      this.intermediateEvents.push.apply(this.intermediateEvents,filtered_events)
       if(events.nextPageToken){
         this.getListofEvents(events.nextPageToken)
       } else{
