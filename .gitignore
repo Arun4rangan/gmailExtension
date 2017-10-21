@@ -4,6 +4,7 @@
 ./extension.pem
 ./extension_build.pem
 ./extension.crx
+*.zip
 
 # compiled output
 /dist
