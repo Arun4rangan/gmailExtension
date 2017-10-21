@@ -1,7 +1,7 @@
 <div>
-    <div *ngFor="let item of events | paginate: { itemsPerPage: 3, currentPage: page }">
-      <p>{{item.summary}}</p>
-      <button (click)="deleteEvent(item)">x</button>
+    <div *ngFor="let item of events | paginate: { itemsPerPage: 3, currentPage: page }" class="event">
+      <p class="eventSummary">{{item.summary}}</p>
+      <button (click)="deleteEvent(item)" class="delete">x</button>
     </div>
     <pagination-controls (pageChange)="page = $event"></pagination-controls>
 </div>

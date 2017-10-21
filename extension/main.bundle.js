@@ -21,7 +21,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, "h2 {\n  color: #B22222;\n  font-style: italic;\n}", ""]);
 
 // exports
 
@@ -34,8 +34,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div style=\"text-align:center\">\n  <h1>\n    {{title}}!\n  </h1>\n</div>\n<create-event (onInsert)=\"taskList.setListofEvents()\"></create-event>\n<tasks-list #taskList></tasks-list>\n\n"
-
+module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div style=\"text-align:center\">\n  <h2>\n    {{title}}!\n  </h2>\n</div>\n<create-event (onInsert)=\"taskList.setListofEvents()\"></create-event>\n<tasks-list #taskList></tasks-list>\n\n"
 
 /***/ }),
 
@@ -54,7 +53,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 var AppComponent = (function () {
     function AppComponent() {
-        this.title = 'gTasker';
+        this.title = 'g-Tasker';
     }
     return AppComponent;
 }());
@@ -205,7 +204,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "[class*='col-'] {\n  float: left;\n  padding-right: 20px;\n  padding-bottom: 20px;\n}\n[class*='col-']:last-of-type {\n  padding-right: 0;\n}\na {\n  text-decoration: none;\n}\n*, *:after, *:before {\n  box-sizing: border-box;\n}\nh3 {\n  text-align: center; margin-bottom: 0;\n}\nh4 {\n  position: relative;\n}\n.grid {\n  margin: 0;\n}\n.col-1-4 {\n  width: 25%;\n}\n.module {\n  padding: 20px;\n  text-align: center;\n  color: #eee;\n  max-height: 120px;\n  min-width: 120px;\n  background-color: #607D8B;\n  border-radius: 2px;\n}\n.module:hover {\n  background-color: #EEE;\n  cursor: pointer;\n  color: #607d8b;\n}\n.grid-pad {\n  padding: 10px 0;\n}\n.grid-pad > [class*='col-']:last-of-type {\n  padding-right: 20px;\n}\n@media (max-width: 600px) {\n  .module {\n    font-size: 10px;\n    max-height: 75px; }\n}\n@media (max-width: 1024px) {\n  .grid {\n    margin: 0;\n  }\n  .module {\n    min-width: 60px;\n  }\n}", ""]);
+exports.push([module.i, "select {\n  -webkit-appearance: button;\n  -webkit-padding-end: 20px;\n  -webkit-padding-start: 2px;\n  -webkit-user-select: none;\n  background-image: url(http://i62.tinypic.com/15xvbd5.png);\n  background-color: #FFFFFF;\n  background-position: 97% center;\n  background-repeat: no-repeat;\n  border: 1px solid #AAA;\n  color: #B22222;\n  overflow: hidden;\n  padding: 3px 3px;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  width: 154px;\n  font-size: 13px;\n  font-weight: 200;\n}\n\n#summary{\n  color: #B22222;\n  padding: 3px 3px;\n  width: 144px;\n  font-size: 13px;\n  font-weight: 200;\n}\n\n#date{\n  color: #B22222;\n  font-size: 13px;\n  font-weight: 200;\n  width: 149px;\n}\n\n#create{\n  margin-top:2px;\n  background-color: #2199e8;\n  border: none;\n  color:#fefefe;\n  padding:0.1875rem 0.625rem;\n}", ""]);
 
 // exports
 
@@ -218,7 +217,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/create-event.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"grid grid-pad\">\n  <select [(ngModel)]=\"type\">\n    <option *ngFor=\"let type of types\">{{type}}</option>\n  </select>\n  <input [(ngModel)]=\"summary\" placeholder=\"summary\" type=\"text\" required=\"true\">\n  <input [(ngModel)]=\"startDatetime\" type=\"date\">\n  <button (click)=\"insertEventInCalender()\">Create</button>\n</div>"
+module.exports = "<div class=\"grid grid-pad\">\n  <select [(ngModel)]=\"type\">\n    <option *ngFor=\"let type of types\">{{type}}</option>\n  </select>\n  <input [(ngModel)]=\"summary\" placeholder=\"summary\" type=\"text\" required=\"true\" id=\"summary\">\n  <input [(ngModel)]=\"startDatetime\" type=\"date\" id=\"date\">\n  <button (click)=\"insertEventInCalender()\" id=\"create\">Create</button>\n</div>"
 
 /***/ }),
 
@@ -323,10 +322,28 @@ var _a, _b;
 
 /***/ }),
 
+/***/ "../../../../../src/app/task-list.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".eventSummary {\n  color: #B22222;\n  font-size: 13px;\n  font-weight: 200;\n}\n\n.event {\n  border-top: thin #B22222\n}\n\n.delete {\n  display: inline-block;\n  background: white; /* W3C */\n  border: 1px solid #a1a1a1;\n  font: bold 1em/2em Arial, Helvetica;\n  text-decoration: none;\n  color: #333;\n}", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
 /***/ "../../../../../src/app/task-list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>\n    <div *ngFor=\"let item of events | paginate: { itemsPerPage: 3, currentPage: page }\">\n      <p>{{item.summary}}</p>\n      <button (click)=\"deleteEvent(item)\">x</button>\n    </div>\n    <pagination-controls (pageChange)=\"page = $event\"></pagination-controls>\n</div>"
+module.exports = "<div>\n    <div *ngFor=\"let item of events | paginate: { itemsPerPage: 3, currentPage: page }\" class=\"event\">\n      <p class=\"eventSummary\">{{item.summary}}</p>\n      <button (click)=\"deleteEvent(item)\" class=\"delete\">x</button>\n    </div>\n    <pagination-controls (pageChange)=\"page = $event\"></pagination-controls>\n</div>"
 
 /***/ }),
 
@@ -370,13 +387,16 @@ var TaskListComponent = (function () {
     };
     TaskListComponent.prototype.setListofEvents = function () {
         var _this = this;
-        this.events = [];
+        this.intermediateEvents = [];
         var userPromise = this.getUser();
         Promise.all(userPromise)
             .then(function (userDetail) {
             _this.userDetail = userDetail[0];
             _this.token = userDetail[1];
             _this.getListofEvents(null);
+            console.log(_this.events);
+            _this.events = _this.intermediateEvents;
+            console.log(_this.events);
         }).catch(function (error) { _this.handleError(error, 'userDetails'); });
     };
     TaskListComponent.prototype.getListofEvents = function (nextPage) {
@@ -385,13 +405,13 @@ var TaskListComponent = (function () {
         this.eventCall.then(function (events) {
             var filtered_events = events.items.filter(function (event) {
                 for (var i = 0; i < _this.types.length; i++) {
-                    if (event.summary.includes(_this.types[i])) {
+                    if (event.summary.indexOf(_this.types[i]) != -1) {
                         return true;
                     }
                 }
                 return false;
             });
-            _this.events.push.apply(_this.events, filtered_events);
+            _this.intermediateEvents.push.apply(_this.intermediateEvents, filtered_events);
             if (events.nextPageToken) {
                 _this.getListofEvents(events.nextPageToken);
             }
@@ -426,6 +446,7 @@ TaskListComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'tasks-list',
         template: __webpack_require__("../../../../../src/app/task-list.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/task-list.component.css")]
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__user_token_service__["a" /* UserTokenService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__user_token_service__["a" /* UserTokenService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__calendar_service__["a" /* CalendarService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__calendar_service__["a" /* CalendarService */]) === "function" && _b || Object])
 ], TaskListComponent);
